@@ -13,7 +13,7 @@ int main()
     getchar();
 
     printf("Enter text: ");
-    gets(text);
+    fgets(text, sizeof(text), stdin);
 
     printf("Enter key: ");
     scanf("%d", &key);

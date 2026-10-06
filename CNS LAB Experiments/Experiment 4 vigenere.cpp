@@ -5,34 +5,36 @@
 int main()
 {
     char text[100], key[100];
-    int i, j=0, k, ch;
+    int i, j = 0, k, ch;
 
     printf("1.Encrypt  2.Decrypt: ");
-    scanf("%d",&ch);
+    scanf("%d", &ch);
     getchar();
 
     printf("Text: ");
-    gets(text);
+    fgets(text, sizeof(text), stdin);
 
     printf("Key: ");
-    gets(key);
+    fgets(key, sizeof(key), stdin);
 
-    for(i=0;text[i];i++)
+    key[strcspn(key, "\n")] = '\0';
+
+    for(i = 0; text[i] != '\0'; i++)
     {
         if(isalpha(text[i]))
         {
-            k=toupper(key[j%strlen(key)])-'A';
+            k = toupper(key[j % strlen(key)]) - 'A';
 
-            if(ch==1)
-                text[i]=(toupper(text[i])-'A'+k)%26+'A';
+            if(ch == 1)
+                text[i] = (toupper(text[i]) - 'A' + k) % 26 + 'A';
             else
-                text[i]=(toupper(text[i])-'A'-k+26)%26+'A';
+                text[i] = (toupper(text[i]) - 'A' - k + 26) % 26 + 'A';
 
             j++;
         }
     }
 
-    printf("Result: %s",text);
+    printf("Result: %s", text);
 
     return 0;
 }

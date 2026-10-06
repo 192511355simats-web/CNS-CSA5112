@@ -22,10 +22,10 @@ int main()
     getchar();
 
     printf("Key: ");
-    gets(key);
-
+    fgets(key, sizeof(key), stdin);
+    
     printf("Text: ");
-    gets(s);
+    fgets(s, sizeof(s), stdin);
 
     for(i=0;key[i];i++)
     {

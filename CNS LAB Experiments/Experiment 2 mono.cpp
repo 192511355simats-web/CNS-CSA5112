@@ -16,7 +16,7 @@ int main()
     getchar();
 
     printf("Enter text: ");
-    gets(text);
+    fgets(text, sizeof(text), stdin);
 
     for(i = 0; text[i] != '\0'; i++)
     {
