@@ -1,0 +1,66 @@
+========================================================================
+             CUSTOM ASSEMBLY STUDIO - CAPSTONE PROJECT
+========================================================================
+Project: Design and Development of a Custom Assembly Language Compiler
+         and Cycle-Accurate Virtual CPU Execution Engine.
+
+------------------------------------------------------------------------
+QUICK START GUIDE (FOR WINDOWS):
+------------------------------------------------------------------------
+
+METHOD 1: Native Desktop Executable (Recommended)
+  1. Double-click "CustomAssemblyStudio.exe".
+  2. The Studio will immediately launch its execution engine and open
+     the Custom Assembly Studio IDE in a dedicated desktop window.
+  3. You can minimize the Control Center to your Windows Taskbar tray,
+     or click "Stop & Exit" to close it when done.
+
+METHOD 2: Batch Launcher
+  1. Double-click "start_studio.bat".
+  2. It will automatically detect and start CustomAssemblyStudio.exe.
+
+METHOD 3: Web Browser
+  1. While the app is active, you can open any web browser (Chrome, Edge,
+     Firefox, Brave) and visit:
+     http://127.0.0.1:8080/
+
+------------------------------------------------------------------------
+NO INSTALLATION REQUIRED:
+------------------------------------------------------------------------
+* No Node.js or npm required.
+* No Python required.
+* Zero external dependencies — runs directly on Windows 10 & 11!
+
+------------------------------------------------------------------------
+KEYBOARD SHORTCUTS IN STUDIO:
+------------------------------------------------------------------------
+* F5        : Run Continuous CPU Simulation
+* F10       : Step Single Machine Cycle
+* Esc       : Pause / Halt Execution
+* Ctrl + B  : Compile Active Assembly Source
+
+------------------------------------------------------------------------
+WHAT'S INCLUDED IN THIS PACKAGE:
+------------------------------------------------------------------------
+* CustomAssemblyStudio.exe : Self-contained standalone application & server
+* start_studio.bat         : Quick launcher script
+* index.html               : Web application interface & layouts
+* css/                     : Dark-mode developer IDE design system
+* js/compiler/             : 7-stage custom assembly compiler pipeline:
+                             - Lexer (Tokenizer)
+                             - Parser (Grammar & AST)
+                             - Semantic Analyzer (Label & bounds check)
+                             - Intermediate Representation (TAC Quadruples)
+                             - Code Generator (3-byte machine code)
+* js/engine/               : Cycle-accurate virtual machine execution engine:
+                             - 8 General-Purpose Registers (R0-R7)
+                             - Program Counter (PC) & Instruction Register (IR)
+                             - Arithmetic Logic Unit (ALU) with live flags
+                             - 256-byte Byte-Addressable RAM
+* js/ui/                   : Interactive Workbench, Telemetry, and Control Views
+* js/samples/              : Built-in demo assembly programs:
+                             - Fibonacci Sequence Calculator
+                             - Factorial Calculator
+                             - Array Memory Pointer Loop
+                             - Bitwise Logic & Arithmetic
+========================================================================
