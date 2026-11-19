@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdint.h>
+
+// Reusing S-DES core functions from Question 22
+uint16_t permute(uint16_t in, const int *p, int p_len, int in_len) {
+    uint16_t out = 0;
+    for (int i = 0; i < p_len; i++) out = (out << 1) | ((in >> (in_len - p[i])) & 1);
+    return out;
+}
+uint8_t left_shift_5(uint8_t val, int shifts) { return ((val << shifts) | (val >> (5 - shifts))) & 0x1F; }
+void generate_keys(uint16_t key, uint8_t *k1, uint8_t *k2) {
+    const int P10[] = {3,5,2,7,4,10,1,9,8,6}, P8[] = {6,3,7,4,8,5,10,9};
+    uint16_t p10 = permute(key, P10, 10, 10);
+    uint8_t l = left_shift_5((p10 >> 5) & 0x1F, 1), r = left_shift_5(p10 & 0x1F, 1);
+    *k1 = permute((l << 5) | r, P8, 8, 10);
+    l = left_shift_5(l, 2); r = left_shift_5(r, 2);
+    *k2 = permute((l << 5) | r, P8, 8, 10);
+}
+uint8_t fk(uint8_t in, uint8_t sk) {
+    const int EP[] = {4,1,2,3,2,3,4,1}, P4[] = {2,4,3,1};
+    const int S0[4][4] = {{1,0,3,2},{3,2,1,0},{0,2,1,3},{3,1,3,2}};
+    const int S1[4][4] = {{0,1,2,3},{2,0,1,3},{3,0,1,0},{2,1,0,3}};
+    uint8_t L = (in >> 4) & 0x0F, R = in & 0x0F, ep = permute(R, EP, 8, 4) ^ sk;
+    uint8_t s_out = (S0[((ep>>7)&1)<<1|((ep>>4)&1)][((ep>>6)&1)<<1|((ep>>5)&1)] << 2) |
+                     S1[((ep>>3)&1)<<1|(ep&1)][((ep>>2)&1)<<1|((ep>>1)&1)];
+    return ((L ^ permute(s_out, P4, 4, 4)) << 4) | R;
+}
+uint8_t sdes_encrypt(uint8_t pt, uint16_t key) {
+    const int IP[] = {2,6,3,1,4,8,5,7}, IP_INV[] = {4,1,3,5,7,2,8,6};
+    uint8_t k1, k2; generate_keys(key, &k1, &k2);
+    uint8_t x = fk(permute(pt, IP, 8, 8), k1);
+    x = ((x & 0x0F) << 4) | ((x >> 4) & 0x0F);
+    return permute(fk(x, k2), IP_INV, 8, 8);
+}
+
+void print_bin(uint8_t val) {
+    for (int i = 7; i >= 0; i--) {
+        printf("%d", (val >> i) & 1);
+        if (i == 4) printf(" ");
+    }
+}
+
+void sdes_ctr(const uint8_t *in, uint8_t *out, int len, uint8_t init_ctr, uint16_t key) {
+    for (int i = 0; i < len; i++) {
+        uint8_t keystream = sdes_encrypt((uint8_t)(init_ctr + i), key);
+        out[i] = in[i] ^ keystream;
+    }
+}
+
+int main() {
+    uint8_t ctr = 0b00000000;
+    uint16_t key = 0b0111111101;
+    uint8_t pt[3] = {0b00000001, 0b00000010, 0b00000100};
+    uint8_t ct[3], dec[3];
+
+    sdes_ctr(pt, ct, 3, ctr, key);
+    sdes_ctr(ct, dec, 3, ctr, key); // CTR decryption is identical to encryption
+
+    printf("Plaintext : ");
+    for (int i = 0; i < 3; i++) { print_bin(pt[i]); printf(" "); }
+    printf("\nCiphertext: ");
+    for (int i = 0; i < 3; i++) { print_bin(ct[i]); printf(" "); }
+    printf("\nDecrypted : ");
+    for (int i = 0; i < 3; i++) { print_bin(dec[i]); printf(" "); }
+    printf("\n");
+    return 0;
+}
